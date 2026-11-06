@@ -1,0 +1,116 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "signal_type": {
+      "type": "string",
+      "enum": [
+        "buy_review",
+        "sell_review",
+        "hold",
+        "risk",
+        "insufficient"
+      ]
+    },
+    "account_ref": {
+      "type": "string"
+    },
+    "instrument_ref": {
+      "type": "string"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conditional_price": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recommended_quantity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "invalidation_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_observations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "analysis_confidence": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "not_assessed"
+      ]
+    },
+    "data_quality": {
+      "type": "string",
+      "enum": [
+        "good",
+        "degraded",
+        "insufficient"
+      ]
+    },
+    "changes_from_previous": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "analysis_coverage": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "signal_type",
+    "account_ref",
+    "instrument_ref",
+    "reasons",
+    "source_ids",
+    "conditional_price",
+    "recommended_quantity",
+    "currency",
+    "risk_factors",
+    "invalidation_conditions",
+    "next_observations",
+    "analysis_confidence",
+    "data_quality",
+    "changes_from_previous",
+    "analysis_coverage"
+  ]
+}

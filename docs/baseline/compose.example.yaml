@@ -1,0 +1,96 @@
+# 설계 템플릿: 앱 구현 및 NAS 실기 검증 전 실행 불가
+services:
+  db:
+    image: ${POSTGRES_IMAGE:?검증한_PostgreSQL_16_이미지_digest_필수}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: stockmon
+      POSTGRES_USER: bootstrap_admin
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_bootstrap_password
+      TZ: UTC
+    secrets:
+      - db_bootstrap_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [data]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U bootstrap_admin -d stockmon"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    mem_limit: 1536m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+  monitor:
+    image: ${APP_IMAGE:?검증한_앱_이미지_digest_필수}
+    command: [dotnet, StockMon.Worker.dll, worker, --owner, OWNER-SELF]
+    user: "10001:10001"
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    environment:
+      TZ: UTC
+      APP_MODE: monitor
+      SETTINGS_FILE: /app/config/appsettings.json
+      DATABASE_DSN_FILE: /run/secrets/monitor_dsn
+      BROKER_SECRETS_FILE: /run/secrets/broker_self
+    secrets: [monitor_dsn, broker_self]
+    volumes:
+      - ./config:/app/config:ro
+    networks: [data, outbound]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, dotnet, StockMon.Worker.dll, healthcheck, --role, worker]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    mem_limit: 1536m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+  analysis_notify:
+    image: ${APP_IMAGE:?검증한_앱_이미지_digest_필수}
+    command: [dotnet, StockMon.Worker.dll, analysis-notify]
+    user: "10001:10001"
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    environment:
+      TZ: UTC
+      DATABASE_DSN_FILE: /run/secrets/analysis_dsn
+      INTEGRATION_SECRETS_FILE: /run/secrets/integration_self
+    secrets: [analysis_dsn, integration_self]
+    networks: [data, outbound]
+    depends_on:
+      db: {condition: service_healthy}
+    mem_limit: 1024m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+networks:
+  data: {internal: true}
+  outbound: {}
+volumes:
+  pgdata: {}
+secrets:
+  db_bootstrap_password:
+    file: ${SECRETS_DIR:?}/db_bootstrap_password.txt
+  monitor_dsn:
+    file: ${SECRETS_DIR:?}/monitor_self_dsn.txt
+  analysis_dsn:
+    file: ${SECRETS_DIR:?}/analysis_self_dsn.txt
+  broker_self:
+    file: ${SECRETS_DIR:?}/broker_self.json
+  integration_self:
+    file: ${SECRETS_DIR:?}/integration_self.json
