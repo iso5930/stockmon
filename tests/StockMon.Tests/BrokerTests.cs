@@ -11,7 +11,6 @@ public sealed class BrokerTests
     {
         public override DateTimeOffset GetUtcNow() => new(2026, 11, 6, 0, 0, 0, TimeSpan.Zero);
     }
-    private sealed record Scenario(string ScenarioName, int Pages, int Positions, string? Error);
 
     [Fact]
     public async Task RecordedScenariosReproduceCompleteAndFailedResponses()

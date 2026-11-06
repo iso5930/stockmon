@@ -21,7 +21,7 @@ if ($SelfTest) {
 $root = Split-Path $PSScriptRoot -Parent
 $forbidden = '(?i)(^|/)(secrets|data)/|(^|/)\.env($|\.)|\.(pem|pfx|key|dump|bak)$|appsettings\.Local\.json$'
 $failed = $false
-# Git -z avoids quoting filenames; inspection includes new files before staging.
+# Keep Unicode paths readable; inspection includes new files before staging.
 $paths = (& git -C $root -c core.quotepath=false ls-files --cached --others --exclude-standard) | Sort-Object -Unique
 if ($LASTEXITCODE -ne 0) { throw 'Cannot enumerate repository files' }
 foreach ($path in $paths) {

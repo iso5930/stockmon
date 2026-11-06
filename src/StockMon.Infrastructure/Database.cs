@@ -21,7 +21,7 @@ public static class DatabaseMigrator
         using var stream = assembly.GetManifestResourceStream("StockMon.Infrastructure.Migrations.001_initial.sql")
             ?? throw new InvalidOperationException("Migration resource missing.");
         using var reader = new StreamReader(stream, Encoding.UTF8);
-        var sql = await reader.ReadToEndAsync(token);
+        var sql = (await reader.ReadToEndAsync(token)).ReplaceLineEndings("\n");
         var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(sql)));
         await using var existing = new NpgsqlCommand("SELECT sha256 FROM public.stockmon_migrations WHERE version = 1", connection, transaction);
         var previous = await existing.ExecuteScalarAsync(token);
