@@ -1,0 +1,8 @@
+[
+  { "scenario": "Normal", "pages": 1, "positions": 1, "error": null },
+  { "scenario": "MultiPage", "pages": 2, "positions": 2, "error": null },
+  { "scenario": "Unauthorized", "pages": 0, "positions": 0, "error": "401" },
+  { "scenario": "RateLimited", "pages": 0, "positions": 0, "error": "429" },
+  { "scenario": "Timeout", "pages": 0, "positions": 0, "error": "timeout" },
+  { "scenario": "PartialPage", "pages": 1, "positions": 0, "error": "partial_page_timeout" }
+]

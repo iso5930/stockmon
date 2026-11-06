@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/StockMon.Core/StockMon.Core.csproj" />
+    <Project Path="src/StockMon.Infrastructure/StockMon.Infrastructure.csproj" />
+    <Project Path="src/StockMon.Worker/StockMon.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/StockMon.Tests/StockMon.Tests.csproj" />
+  </Folder>
+</Solution>

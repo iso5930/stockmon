@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../StockMon.Infrastructure/StockMon.Infrastructure.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.14" />
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

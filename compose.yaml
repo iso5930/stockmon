@@ -1,0 +1,13 @@
+# Local synthetic smoke test only. No broker credentials and no persistent monitor yet.
+services:
+  monitor:
+    build: .
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    environment:
+      Monitor__Mode: Fake
+      Monitor__Scenario: MultiPage
+    command: [fake-once]
