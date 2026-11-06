@@ -17,6 +17,10 @@ try {
         Start-Sleep -Seconds 1
     }
     if (-not $ready) { throw 'PostgreSQL readiness timeout' }
+    # Validate the reviewed migration directly with PostgreSQL before testing the .NET runner.
+    $migration = Get-Content 'src/StockMon.Infrastructure/Migrations/001_initial.sql' -Raw
+    "BEGIN;`n$migration`nROLLBACK;" | docker exec -i $container psql -U postgres -d stockmon_test -v ON_ERROR_STOP=1
+    if ($LASTEXITCODE -ne 0) { throw 'Migration SQL preflight failed' }
     $binding = docker port $container 5432/tcp
     $port = ($binding.Trim() -split ':')[-1]
     $env:STOCKMON_TEST_ADMIN_DSN = "Host=127.0.0.1;Port=$port;Database=stockmon_test;Username=postgres;Password=$password;Include Error Detail=false"
