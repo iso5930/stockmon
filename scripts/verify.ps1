@@ -27,3 +27,5 @@ try {
     if ($WithDatabase) { & "$PSScriptRoot/test-db.ps1" }
     else { Write-Output 'Database integration NOT RUN; use -WithDatabase on a Docker host.' }
 } finally { Pop-Location }
+# Expected negative CLI tests return 2; do not leak that code to the CI shell.
+$global:LASTEXITCODE = 0
