@@ -6,7 +6,7 @@ CREATE SCHEMA stockmon;
 REVOKE ALL ON SCHEMA stockmon FROM PUBLIC;
 
 CREATE TABLE stockmon.owners (
-    id text PRIMARY KEY CHECK (id ~ '^[A-Za-z0-9_-]{1,80}$)
+    id text PRIMARY KEY CHECK (id ~ '^[A-Za-z0-9_-]{1,80}$')
 );
 CREATE TABLE stockmon.principals (
     id text PRIMARY KEY,
@@ -16,7 +16,7 @@ CREATE TABLE stockmon.principals (
     active boolean NOT NULL DEFAULT false
 );
 CREATE TABLE stockmon.accounts (
-    id text PRIMARY KEY CHECK (id ~ '^[A-Za-z0-9_-]{1,80}$),
+    id text PRIMARY KEY CHECK (id ~ '^[A-Za-z0-9_-]{1,80}$'),
     owner_id text NOT NULL REFERENCES stockmon.owners,
     broker text NOT NULL CHECK (broker IN ('Kis','Shinhan')),
     product text NOT NULL CHECK (product IN ('Isa','Domestic','Overseas','Pension')),
